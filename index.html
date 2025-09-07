@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GBV Vulnerability Assessment</title>
+    <style>
+      body { font-family: Arial, Helvetica, sans-serif; margin: 20px; background: #f5f7fb; }
+      .card { background: white; padding: 18px; border-radius: 8px; box-shadow: 0 6px 18px rgba(0,0,0,0.06); max-width: 900px; margin: auto; }
+      label { display:block; margin-top:10px; font-weight:600; }
+      input, select { width:100%; padding:8px; margin-top:6px; border-radius:6px; border:1px solid #ddd; }
+      .row { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
+      .full { grid-column: 1 / -1; }
+      button { margin-top:14px; padding:10px 16px; border:none; background:#4f46e5; color:white; border-radius:8px; cursor:pointer; }
+      .results { margin-top: 18px; }
+      .badge { display:inline-block; padding:6px 10px; border-radius:6px; color:white; font-weight:700; }
+      .vulnerable { background: linear-gradient(90deg,#ef4444,#f97316); }
+      .not-vulnerable { background: linear-gradient(90deg,#10b981,#34d399); }
+      .section-title { margin-top:14px; font-size:1.05rem; font-weight:700; }
+      ul { padding-left: 18px; }
+      img.shap { max-width:100%; height:auto; border-radius:6px; margin-top:8px; }
+      .small { font-size:0.9rem; color:#666; }
+      .collapsible { cursor: pointer; padding: 8px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+      .collapsible:hover { background-color: #f8f9fa; }
+      .collapsible-content { display: none; padding: 10px 0; }
+      .collapsible-content.active { display: block; }
+      .collapse-icon { transition: transform 0.3s ease; }
+      .collapse-icon.rotated { transform: rotate(90deg); }
+      @media (max-width:700px){ .row { grid-template-columns: 1fr } }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h2>GBV Vulnerability Assessment</h2>
+      <p class="small">Fill required fields and click "Assess Vulnerability Risk".</p>
+
+      <form id="predictionForm">
+        <div class="row">
+          <div>
+            <label for="individual_age">Age</label>
+            <input type="number" id="individual_age" name="individual_age" min="1" max="100" required>
+          </div>
+          <div>
+            <label for="gender">Gender</label>
+            <select id="gender" name="gender" required>
+              <option value="">Select...</option>
+              <option value="0">Female</option>
+              <option value="1">Male</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="current_living_arrangement">Living Situation</label>
+            <select id="current_living_arrangement" name="current_living_arrangement" required>
+              <option value="">Select...</option>
+              <option value="0">Alone</option>
+              <option value="1">Parent</option>
+              <option value="2">Guardian</option>
+              <option value="3">Partner</option>
+              <option value="-1">Unknown</option>
+              <option value="99">Other</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="individual_lives_with">Household Composition</label>
+            <select id="individual_lives_with" name="individual_lives_with" required>
+              <option value="">Select...</option>
+              <option value="0">Alone</option>
+              <option value="1">Parent</option>
+              <option value="2">Parent/Guardian</option>
+              <option value="3">Relative</option>
+              <option value="4">Spouse/Cohabiting</option>
+              <option value="-1">Unknown</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="individual_employment_status">Employment status</label>
+            <select id="individual_employment_status" name="individual_employment_status" required>
+              <option value="">Select...</option>
+              <option value="0">Unemployed</option>
+              <option value="1">Currently employed</option>
+              <option value="2">Self employed</option>
+              <option value="3">Not reported</option>
+              <option value="-1">Unknown</option>
+              <option value="99">Other</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="educational_status">Education level</label>
+            <select id="educational_status" name="educational_status" required>
+              <option value="">Select...</option>
+              <option value="0">No formal education</option>
+              <option value="1">Some primary</option>
+              <option value="2">Completed primary</option>
+              <option value="3">Some secondary</option>
+              <option value="4">Completed secondary</option>
+              <option value="5">Undergraduate</option>
+              <option value="6">Graduate</option>
+              <option value="7">Postgraduate</option>
+              <option value="8">Diploma</option>
+              <option value="-1">Unknown</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="househead_employment_status">Head of Household Employment</label>
+            <select id="househead_employment_status" name="househead_employment_status" required>
+              <option value="">Select...</option>
+              <option value="0">Unemployed</option>
+              <option value="1">Currently employed</option>
+              <option value="2">Self employed</option>
+              <option value="3">Not reported</option>
+              <option value="-1">Unknown</option>
+              <option value="99">Other</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="vul_cat_if_applicable">Previously victimized?</label>
+            <select id="vul_cat_if_applicable" name="vul_cat_if_applicable" required>
+              <option value="">Select...</option>
+              <option value="0">No</option>
+              <option value="1">Yes</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="IDP">Are you an internally displaced person(IDP)?</label>
+            <select id="IDP" name="IDP" required>
+              <option value="">Select...</option>
+              <option value="0">No</option>
+              <option value="1">Yes</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="PLWD">Any disability?</label>
+            <select id="PLWD" name="PLWD" required>
+              <option value="">Select...</option>
+              <option value="0">No</option>
+              <option value="1">Yes</option>
+            </select>
+          </div>
+
+        </div>
+
+        <div class="full">
+          <button type="submit" id="predictBtn">Assess Vulnerability Risk</button>
+        </div>
+      </form>
+
+      <div class="results" id="results" style="display:none;">
+        <div>
+          <h3>Result</h3>
+          <div id="predictionBadge"></div>
+          <p id="predictionLabel"></p>
+          <p id="confidenceScore"></p>
+          <p id="riskLevel"></p>
+        </div>
+
+        <div>
+          <div class="collapsible" onclick="toggleCollapse('aiSummary')">
+            <h4 class="section-title" style="margin:0;">AI Summary</h4>
+            <span class="collapse-icon">▶</span>
+          </div>
+          <div class="collapsible-content" id="aiSummary">
+            <div id="summaryInsights"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="collapsible" onclick="toggleCollapse('shapSection')">
+            <h4 class="section-title" style="margin:0;">Top Contributing Factors (SHAP)</h4>
+            <span class="collapse-icon">▶</span>
+          </div>
+          <div class="collapsible-content" id="shapSection">
+            <div id="shapPlot"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="collapsible" onclick="toggleCollapse('inputSection')">
+            <h4 class="section-title" style="margin:0;">Model Input</h4>
+            <span class="collapse-icon">▶</span>
+          </div>
+          <div class="collapsible-content" id="inputSection">
+            <div id="inputDisplay"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Submit form via fetch to /predict
+      document.getElementById('predictionForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        document.getElementById('predictBtn').disabled = true;
+
+        const form = new FormData(this);
+        const data = {};
+        for (let [k,v] of form.entries()) data[k]=v;
+
+        try {
+          const res = await fetch('/predict', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify(data)
+          });
+          const payload = await res.json();
+          if (!payload.success) {
+            alert(payload.error || 'Prediction failed');
+            return;
+          }
+          renderResult(payload);
+        } catch(err) {
+          alert('Network or server error: ' + err.message);
+        } finally {
+          document.getElementById('predictBtn').disabled = false;
+        }
+      });
+
+      function renderResult(payload) {
+        const p = payload.prediction || {};
+        const explanation = payload.explanation || {};
+        const user_input = payload.user_input || payload.model_input || {};
+
+        // Badge
+        const isVul = (p.prediction === 1 || p.prediction === '1' || p.prediction === 'VULNERABLE');
+        const badge = document.getElementById('predictionBadge');
+        badge.innerHTML = isVul ? '<span class="badge vulnerable">VULNERABLE</span>' : '<span class="badge not-vulnerable">NOT VULNERABLE</span>';
+
+        document.getElementById('predictionLabel').textContent = p.prediction_label || (isVul ? 'VULNERABLE' : 'NOT VULNERABLE');
+        document.getElementById('confidenceScore').textContent = 'Confidence: ' + (p.confidence !== undefined ? p.confidence + '%' : (p.prob && (p.prob*100).toFixed(1)+'%') || 'N/A');
+        document.getElementById('riskLevel').textContent = 'Risk Level: ' + (p.risk_level || 'N/A');
+
+        // Insights
+        let s = '';
+        if (explanation && explanation.insights) {
+          if (explanation.insights.reasons && explanation.insights.reasons.length) {
+            s += '<h5>Key Risk Factors</h5><ul>';
+            explanation.insights.reasons.forEach(r => s += <li>${r}</li>);
+            s += '</ul>';
+          }
+          if (explanation.insights.suggestions && explanation.insights.suggestions.length) {
+            s += '<h5>Recommended Interventions</h5><ul>';
+            explanation.insights.suggestions.forEach(r => s += <li>${r}</li>);
+            s += '</ul>';
+          }
+        } else {
+          s += '<p class="small">No insights available.</p>';
+        }
+        document.getElementById('summaryInsights').innerHTML = s;
+
+        // SHAP
+        if (payload.shap_plot) {
+          document.getElementById('shapPlot').innerHTML = <img class="shap" src="data:image/png;base64,${payload.shap_plot}" alt="shap">;
+        } else {
+          document.getElementById('shapPlot').innerHTML = '<p class="small">No SHAP plot available.</p>';
+        }
+
+        // Input display
+        let inputHTML = '<div>';
+        for (const k of Object.keys(user_input)) {
+          inputHTML += <div><strong>${k}</strong>: ${user_input[k]}</div>;
+        }
+        inputHTML += '</div>';
+        document.getElementById('inputDisplay').innerHTML = inputHTML;
+
+        document.getElementById('results').style.display = 'block';
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+      }
+
+      function toggleCollapse(sectionId) {
+        const content = document.getElementById(sectionId);
+        const icon = event.target.closest('.collapsible').querySelector('.collapse-icon');
+
+        if (content.classList.contains('active')) {
+          content.classList.remove('active');
+          icon.classList.remove('rotated');
+          icon.textContent = '▶';
+        } else {
+          content.classList.add('active');
+          icon.classList.add('rotated');
+          icon.textContent = '▼';
+        }
+      }
+    </script>
+  </body>
+</html>
