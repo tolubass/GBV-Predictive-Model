@@ -26,20 +26,8 @@ jobs:
           VALIDATE_ALL_CODEBASE: true
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Validate Python files
           VALIDATE_PYTHON_BLACK: true
           VALIDATE_PYTHON_FLAKE8: true
           VALIDATE_PYTHON_PYLINT: true
-          # Validate HTML files
           VALIDATE_HTML: true
-          # Validate Markdown (README)
           VALIDATE_MARKDOWN: true
-```
-
-### **Step 3: Commit the File**
-
-1. Scroll down to the bottom of the page
-2. You'll see a section called **"Commit changes"**
-3. In the first text box, type a commit message like:
-```
-   Add Super-Linter GitHub Actions workflow
