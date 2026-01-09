@@ -1,0 +1,15 @@
+[flake8]
+# Ignore unused imports and variables - common in ML projects
+ignore = F401, F841, W503, E203
+# Allow longer lines for readability
+max-line-length = 120
+# Exclude common directories
+exclude = 
+    .git,
+    __pycache__,
+    venv,
+    env,
+    .venv,
+    data,
+    model,
+    notebook
