@@ -1,9 +1,13 @@
-
 from flask import Flask, request, jsonify, render_template_string
 import numpy as np
 import base64
 import io
 import matplotlib
+import warnings
+import logging
+import threading
+import webbrowser
+import time
 
 # Use non-interactive backend for matplotlib (works on servers)
 matplotlib.use("Agg")
@@ -11,12 +15,6 @@ import matplotlib.pyplot as plt
 
 from model_utils import GBVVulnerabilityPredictor
 from Explanation_engine import explain_instance
-
-import warnings
-import logging
-import threading
-import webbrowser
-import time
 
 warnings.filterwarnings("ignore")
 logging.basicConfig(level=logging.INFO)
@@ -508,4 +506,3 @@ if __name__ == "__main__":
 
     # Run Flask app (no reloader so model isn't double-loaded)
     app.run(host="127.0.0.1", port=5000, debug=False, use_reloader=False)
-
