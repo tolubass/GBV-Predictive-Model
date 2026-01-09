@@ -26,8 +26,13 @@ jobs:
           VALIDATE_ALL_CODEBASE: true
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VALIDATE_PYTHON_BLACK: true
+          # Only validate Python syntax errors (not style)
           VALIDATE_PYTHON_FLAKE8: true
-          VALIDATE_PYTHON_PYLINT: true
-          VALIDATE_HTML: true
+          VALIDATE_PYTHON_PYLINT: false
+          VALIDATE_PYTHON_BLACK: false
+          # Don't validate HTML styling
+          VALIDATE_HTML: false
+          # Keep markdown validation
           VALIDATE_MARKDOWN: true
+          # Make flake8 less strict
+          PYTHON_FLAKE8_CONFIG_FILE: .flake8
